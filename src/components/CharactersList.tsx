@@ -1,7 +1,9 @@
 
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import CardCharacters from './CardCharacters'
 import Pagination from './Pagination'
+
 
 export type Character = {
     id: number;
@@ -35,6 +37,8 @@ export default function CharactersList() {
 
     const RickAdnMortyAPI = async (url: string) => {
         try {
+
+            /*
             const res = await fetch(url);
             const data = await res.json();
             const result = data.results
@@ -42,7 +46,19 @@ export default function CharactersList() {
             console.log(info);
             console.log(result);
             setCharacters(result);
+            setInfo(info);*/
+
+            const res = await axios.get(url) //Obtenemos la URL
+            const data =  res.data;
+            const results = data.results;
+            const info = data.info;
+            console.log(res);
+            console.log(data);
+            console.log(results);
+            console.log(info);
+            setCharacters(results);
             setInfo(info);
+
         } catch (error) {
             console.log(error);
         }
