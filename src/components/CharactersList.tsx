@@ -1,6 +1,8 @@
 
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { actionCreators, State } from '../state'
 import CardCharacters from './CardCharacters'
 import Pagination from './Pagination'
 
@@ -23,69 +25,38 @@ export type Info = {
 
 export default function CharactersList() {
 
-    const [characters, setCharacters] = useState<Character[]>([]);
-    const [info, setInfo] = useState<Info>({
-        next: '',
-        prev: ''
-    })
+     const characters: any = useSelector((state: State) => state.character);
+     
+     const [info, setInfo] = useState<Info>({
+            next: '',
+            prev: ''
+     })
 
-    useEffect(() => {
-        RickAdnMortyAPI(API);
-    }, [])
+     const dispatch = useDispatch();
 
-    const API: string = 'https://rickandmortyapi.com/api/character';
+     const { fetchAll } = bindActionCreators(actionCreators, dispatch);
 
-    const RickAdnMortyAPI = async (url: string) => {
-        try {
 
-            /*
-            const res = await fetch(url);
-            const data = await res.json();
-            const result = data.results
-            const info = data.info;
-            console.log(info);
-            console.log(result);
-            setCharacters(result);
-            setInfo(info);*/
+     useEffect(()=> {
+         fetchAll();
+     }, [dispatch]);
 
-            const res = await axios.get(url) //Obtenemos la URL
-            const data =  res.data;
-            const results = data.results;
-            const info = data.info;
-            console.log(res);
-            console.log(data);
-            console.log(results);
-            console.log(info);
-            setCharacters(results);
-            setInfo(info);
+   
 
-        } catch (error) {
-            console.log(error);
-        }
-    } 
-
-    const onNext = () => {
-        RickAdnMortyAPI(info.next);
-    }
-
-    const onPrev = () => {
-        RickAdnMortyAPI(info.prev);
-    }
-    
     return (
         <div className="container mx-auto mt-16 mb-16">
            <div className="mb-16">
-            <Pagination  info={info} next={onNext} prev={onPrev}/>
+               <button>Next</button>
            </div>
           <div className="grid gap-y-6 md:grid-cols-2 lg:grid-cols-3 place-items-center">
               {
-                  characters.map((character) => (
-                      <CardCharacters  key={character.id} character={character}/>
+                  characters.map((character: Character) =>(
+                      <CardCharacters key={character.id} character={character} />
                   ))
               }
           </div>
           <div className="mt-16">
-            <Pagination  info={info} next={onNext} prev={onPrev}/>
+            
           </div>
         </div>
     )

@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react'
 import { Character } from './CharactersList'
 
 
-
 interface Props {
     character: Character;
 }
